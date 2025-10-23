@@ -1,0 +1,46 @@
+/*
+Diz que o arquivo usa a sintaxe do Protobuf v3 (mais simples/atual).
+*/
+syntax = "proto3";
+
+/*
+Pacote lógico do Protobuf (não é o pacote Go).
+Ajuda na organização (ex.: versão do contrato v1).
+*/
+package user.v1;
+
+/*
+Crucial para Go: indica o import path do pacote gerado e o nome do pacote Go.
+Antes do ; → caminho do módulo/pasta (para import .../proto).
+Depois do ; → nome do pacote Go gerado (userpb), que você usa como alias.
+*/
+option go_package = "github.com/radieske/tech-lab/grpc-lab/proto;userpb";
+
+/*
+Define o serviço gRPC e seu(s) método(s).
+Aqui: um método GetUser que recebe GetUserRequest e retorna GetUserResponse.
+*/
+service UserService {
+  rpc GetUser (GetUserRequest) returns (GetUserResponse);
+}
+
+/*
+Define o formato da requisição: um campo id do tipo string.
+O = 1 é o field number (usado na serialização binária).
+*/
+message GetUserRequest {
+  string id = 1;
+}
+
+/*
+Resposta com name e email.
+Esses tipos viram structs no Go quando você gera o código.
+
+Quando você roda o protoc, ele lê esse arquivo e gera dois .go:
+proto/user.pb.go → mensagens (structs, getters, marshaling etc.)
+proto/user_grpc.pb.go → stubs gRPC (interfaces do servidor, cliente, registradores, etc.)
+*/
+message GetUserResponse {
+  string name = 1;
+  string email = 2;
+}
