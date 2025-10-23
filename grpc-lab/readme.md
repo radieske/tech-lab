@@ -173,7 +173,7 @@ Resumo rápido
 | .pb.go | o código gerado a partir disso |
 
 ## N3 — Mini-case prático
-## N3 — Integração HTTP → gRPC (≈ 3h)
+### Integração HTTP → gRPC
 
 ### 1. Objetivo
 
