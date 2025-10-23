@@ -28,6 +28,9 @@ run-server:
 run-client:
 	go run ./client
 
+run-gateway:
+	GRPC_ADDR=localhost:50051 go run ./gateway
+
 clean:
 	rm -rf github.com
 	rm -f $(PROTO_DIR)/*.pb.go $(PROTO_DIR)/*_grpc.pb.go

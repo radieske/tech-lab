@@ -1,0 +1,10 @@
+FROM golang:1.24 AS build
+WORKDIR /app
+COPY . .
+RUN go mod tidy
+RUN CGO_ENABLED=0 go build -o /bin/server ./server
+
+FROM gcr.io/distroless/base-debian12
+COPY --from=build /bin/server /server
+EXPOSE 50051
+ENTRYPOINT ["/server"]

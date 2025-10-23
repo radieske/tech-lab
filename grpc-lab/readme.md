@@ -171,3 +171,43 @@ Resumo rápido
 | .proto | o arquivo-fonte onde você escreve o contrato |
 | protoc | o compilador que traduz o .proto para código Go, Java etc. |
 | .pb.go | o código gerado a partir disso |
+
+## N3 — Mini-case prático
+## N3 — Integração HTTP → gRPC (≈ 3h)
+
+### 1. Objetivo
+
+Expandir o laboratório gRPC criando uma aplicação realista, onde um **gateway HTTP** consome um **serviço gRPC**.  
+O objetivo é simular o padrão comum em arquiteturas modernas: um *frontend HTTP* expõe endpoints REST, enquanto a comunicação interna entre serviços é feita via gRPC.
+
+```
+grpc-lab/
+├── client
+│   └── main.go
+├── docker-compose.yml
+├── Dockerfile.gateway
+├── Dockerfile.server
+├── gateway
+│   └── main.go
+├── go.mod
+├── go.sum
+├── Makefile
+├── proto
+│   ├── user_grpc.pb.go
+│   ├── user.pb.go
+│   └── user.proto
+├── readme.md
+└── server
+    └── main.go
+```
+
+---
+
+### 2. Resultado
+
+Com o N3, o projeto passou a possuir:
+- Um serviço gRPC funcional (UserService);
+- Um gateway HTTP que converte chamadas REST → gRPC;
+- Suporte a Docker e Docker Compose para execução unificada;
+- Padronização de comandos via Makefile;
+- Fluxo de comunicação em três camadas: HTTP → gRPC → Resposta JSON.
