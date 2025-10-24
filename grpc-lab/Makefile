@@ -23,13 +23,16 @@ tidy:
 	go mod tidy
 
 run-server:
-	go run ./server
+	USE_TLS=false go run ./server
+
+run-gateway:
+	USE_TLS=false GRPC_ADDR=localhost:50051 go run ./gateway
 
 run-client:
 	go run ./client
 
-run-gateway:
-	GRPC_ADDR=localhost:50051 go run ./gateway
+run-chat:
+	go run ./client/chat/chat_client.go
 
 clean:
 	rm -rf github.com

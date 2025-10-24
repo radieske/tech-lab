@@ -211,3 +211,96 @@ Com o N3, o projeto passou a possuir:
 - Suporte a Docker e Docker Compose para execução unificada;
 - Padronização de comandos via Makefile;
 - Fluxo de comunicação em três camadas: HTTP → gRPC → Resposta JSON.
+
+## N4 — Funcionalidades avançadas
+
+### 1. Objetivo
+
+Evoluir o projeto gRPC com práticas mais avançadas e recursos utilizados em aplicações reais, incluindo observabilidade, segurança e fluxos de comunicação mais robustos.
+
+---
+
+### 2. Funcionalidades implementadas
+
+**Servidor gRPC:**
+- Adicionados **interceptors** para:
+  - Logging detalhado das chamadas.
+  - Captura e tratamento de *panics* (recovery).
+  - Medição de tempo de execução das RPCs.
+- Exposição de **métricas Prometheus** via endpoint HTTP `:9090/metrics`.
+- Implementação de novos métodos:
+  - `ListUsers` — *server-streaming RPC*.
+  - `Chat` — *bidirectional-streaming RPC*.
+- Suporte a **TLS opcional** (ativado via variável de ambiente `USE_TLS=true`).
+
+**Gateway HTTP:**
+- Mapeamento de **erros gRPC → HTTP status codes** (ex: `NotFound` → 404, `InvalidArgument` → 400).
+- Novo endpoint `/profiles/stream` que consome a chamada `ListUsers` via *server-stream* e retorna **NDJSON**.
+- Suporte a comunicação segura via **TLS** com o servidor gRPC.
+
+**Cliente gRPC:**
+- Cliente principal (`client/main.go`) para chamadas simples (`GetUser`).
+- Novo cliente CLI (`client/chat/chat_client.go`) para testar **streaming bidirecional** em tempo real.
+
+---
+
+### 3. Endpoints disponíveis
+
+**gRPC:**
+- `GetUser` — Unary RPC.  
+- `ListUsers` — Server-stream RPC.  
+- `Chat` — Bidirectional-stream RPC.
+
+**HTTP (gateway):**
+- `GET /profiles?id={id}` — Consulta única via gRPC.  
+- `GET /profiles/stream?limit={n}` — Retorna usuários em *streaming NDJSON*.
+
+**Métricas:**
+- `GET :9090/metrics` — Exposição de métricas Prometheus do servidor.
+
+---
+
+### 4. Execução local
+
+**Servidor**
+```bash
+cd grpc-lab
+USE_TLS=false go run ./server
+```
+
+**Gateway**
+```bash
+cd grpc-lab
+USE_TLS=false GRPC_ADDR=localhost:50051 go run ./gateway
+```
+
+**Cliente simples**
+```bash
+cd grpc-lab
+go run ./client
+```
+
+**Cliente de chat (bidirecional)**
+```bash
+cd grpc-lab
+go run ./client/chat
+```
+
+**Com TLS habilitado**
+```bash
+USE_TLS=true go run ./server
+USE_TLS=true GRPC_ADDR=localhost:50051 go run ./gateway
+```
+
+---
+
+### 5. Resultado
+
+Com o N4, o projeto agora possui:
+- Interceptors de logging, recovery e métricas Prometheus.
+- Mapeamento de erros gRPC para códigos HTTP no gateway.
+- Suporte a *server-stream* e *bidirectional-stream*.
+- Comunicação segura via TLS opcional.
+- Observabilidade com métricas em tempo real.
+
+---

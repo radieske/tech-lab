@@ -22,6 +22,8 @@ Aqui: um método GetUser que recebe GetUserRequest e retorna GetUserResponse.
 */
 service UserService {
   rpc GetUser (GetUserRequest) returns (GetUserResponse);
+  rpc ListUsers (ListUsersRequest) returns (stream GetUserResponse);
+  rpc Chat (stream ChatMessage) returns (stream ChatMessage);
 }
 
 /*
@@ -43,4 +45,14 @@ proto/user_grpc.pb.go → stubs gRPC (interfaces do servidor, cliente, registrad
 message GetUserResponse {
   string name = 1;
   string email = 2;
+}
+
+message ListUsersRequest {
+  int32 limit = 1; // número de usuários simulados a retornar
+}
+
+message ChatMessage {
+  string from = 1;
+  string text = 2;
+  int64  ts_unix = 3;
 }
