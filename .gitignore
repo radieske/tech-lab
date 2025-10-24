@@ -1,0 +1,4 @@
+# gRPC Lab - ignore certs privados
+certs/*.key
+*.pem
+*.csrcerts/*.key
